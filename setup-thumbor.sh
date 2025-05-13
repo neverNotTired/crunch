@@ -66,16 +66,16 @@ fi
 
 # Run Thumbor container
 echo "  Starting Thumbor container..."
-# docker run -d --name thumbor \
-#   -p $PORT:8000 \
-#   -e AUTO_WEBP=True \
-#   -e ALLOW_UNSAFE_URL=True \
-#   apsl/thumbor
 docker run -d --name thumbor \
   -p $PORT:8000 \
   -e AUTO_WEBP=True \
   -e ALLOW_UNSAFE_URL=True \
-  ghcr.io/minimalcompact/thumbor:latest
+  apsl/thumbor
+# docker run -d --name thumbor \
+#   -p $PORT:8000 \
+#   -e AUTO_WEBP=True \
+#   -e ALLOW_UNSAFE_URL=True \
+#   ghcr.io/minimalcompact/thumbor:latest
 
 # Health check
 echo "Testing Thumbor..."
