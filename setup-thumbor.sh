@@ -8,6 +8,10 @@ echo -e "For more information, visit:\nhttps://github.com/thumbor/thumbor?tab=re
 
 echo "..."
 
+# Set default port to 8888 unless provided as an argument
+PORT=${1:-8888}
+echo "Using port: $PORT"
+
 # function to install Docker
 install_docker() {
     echo "🐳 Docker not found. Installing Docker..."
@@ -25,6 +29,12 @@ install_docker() {
     sudo apt install -y docker-ce docker-ce-cli containerd.io
 }
 
+# Check for HTTPS ,  if not set it up [maybe write a new script for this]
+echo "This is where my HTTPS logic would go..."
+echo "If I had any..."
+echo "[>>Insert The Fairly OddParents meme here<<]"
+echo "..."
+
 # Check if Docker is already installed
 if ! command -v docker &> /dev/null; then
     install_docker
@@ -33,9 +43,10 @@ else
 fi
 
 # Check/add user perms
-if ! groups $USER | grep -q '\bdocker\b'; then
-    echo "⚠️  You are not in the 'docker' group. Run:"
-    echo "   sudo usermod -aG docker \$USER && newgrp docker"
+REAL_USER=${SUDO_USER:-$USER}
+if [ "$(id -u)" -ne 0 ] && ! groups $REAL_USER | grep -q '\bdocker\b'; then
+    echo "   You are not in the 'docker' group, and you're not root."
+    echo "   Run: sudo usermod -aG docker \$USER && newgrp docker"
     echo "   Or run this script with sudo."
     exit 1
 fi
@@ -49,21 +60,28 @@ echo "Setting up a Thumbor container..."
 
 # Remove any existing Thumbor container
 if [ "$(docker ps -aq -f name=thumbor)" ]; then
-    echo "🧹 Removing existing Thumbor container..."
+    echo "  Removing existing Thumbor container..."
     docker rm -f thumbor
 fi
 
 # Run Thumbor container
-echo "🚀 Starting Thumbor container..."
+echo "  Starting Thumbor container..."
+# docker run -d --name thumbor \
+#   -p $PORT:8000 \
+#   -e AUTO_WEBP=True \
+#   -e ALLOW_UNSAFE_URL=True \
+#   apsl/thumbor
 docker run -d --name thumbor \
-  -p 80:8000 \
+  -p $PORT:8000 \
   -e AUTO_WEBP=True \
   -e ALLOW_UNSAFE_URL=True \
-  apsl/thumbor
+  ghcr.io/minimalcompact/thumbor:latest
 
 # Health check
 echo "Testing Thumbor..."
+echo -e "\n🔗 Test URL:\n\033]8;;http://localhost:$PORT/unsafe/1200x578/filters:format(webp)/https://cremorne.pebble.design/wp-content/uploads/2025/05/cremorne-family-accommodation-one-bedroom-apartment-military-road-bedside-details-844x944.jpg\033\\http://localhost:$PORT/unsafe/1200x578/filters:format(webp)/https://cremorne.pebble.design/wp-content/uploads/2025/05/cremorne-family-accommodation-one-bedroom-apartment-military-road-bedside-details-844x944.jpg\033]8;;\033\\"
+echo ""
 sleep 3
-curl -I http://localhost:8888/unsafe/1200x578/filters:format(webp)/https://cremorne.pebble.design/wp-content/uploads/2025/05/cremorne-family-accommodation-one-bedroom-apartment-military-road-bedside-details-844x944.jpg || echo "⚠️ Thumbor test failed. Check Docker logs."
+curl -I http://localhost:$PORT/unsafe/1200x578/filters:format\(webp\)/https://cremorne.pebble.design/wp-content/uploads/2025/05/cremorne-family-accommodation-one-bedroom-apartment-military-road-bedside-details-844x944.jpg.webp || echo "⚠️ Thumbor test failed. Check Docker logs."
 
-echo "✅ Thumbor is running. Access it at: http://<your-server-ip>/"
+echo "Thumbor is running. Access it at: http://<your-server-ip>/"
