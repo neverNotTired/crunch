@@ -17,4 +17,5 @@ cd crunch
 chmod +x setup-thumbor.sh
 ./setup-thumbor.sh
 ```
+*If not try running as super user: `sudo ./setup-thumbor.sh`*
 3. Once the script has finished, you should be able to access the server via your browser at `http://<your-server-ip>:8888` (you'll need to set up a domain name and SSL cert for production use).
