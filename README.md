@@ -9,7 +9,7 @@ Spin up a new server (droplet, AWS, etc.) with the following:
 1. SSH into your server
 Pull down this repo:
 ```bash
-git clone
+git clone git@github.com:neverNotTired/crunch.git
 cd crunch
 ```
 2. This script should handle the rest:
