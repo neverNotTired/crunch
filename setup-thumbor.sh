@@ -14,7 +14,7 @@ echo "Using port: $PORT"
 
 # function to install Docker
 install_docker() {
-    echo "🐳 Docker not found. Installing Docker..."
+    echo "Docker not found. Installing Docker..."
 
     sudo apt update
     sudo apt install -y apt-transport-https ca-certificates curl software-properties-common gnupg lsb-release
