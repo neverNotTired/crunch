@@ -79,9 +79,9 @@ docker run -d --name thumbor \
 
 # Health check
 echo "Testing Thumbor..."
-echo -e "\n🔗 Test URL:\n\033]8;;http://localhost:$PORT/unsafe/1200x578/filters:format(webp)/https://cremorne.pebble.design/wp-content/uploads/2025/05/cremorne-family-accommodation-one-bedroom-apartment-military-road-bedside-details-844x944.jpg\033\\http://localhost:$PORT/unsafe/1200x578/filters:format(webp)/https://cremorne.pebble.design/wp-content/uploads/2025/05/cremorne-family-accommodation-one-bedroom-apartment-military-road-bedside-details-844x944.jpg\033]8;;\033\\"
+echo -e "Test URL:\n\033]8;;http://localhost:$PORT/unsafe/1200x578/filters:format(webp)/https://cremorne.pebble.design/wp-content/uploads/2025/05/cremorne-family-accommodation-one-bedroom-apartment-military-road-bedside-details-844x944.jpg\033\\http://localhost:$PORT/unsafe/1200x578/filters:format(webp)/https://cremorne.pebble.design/wp-content/uploads/2025/05/cremorne-family-accommodation-one-bedroom-apartment-military-road-bedside-details-844x944.jpg\033]8;;\033\\"
 echo ""
 sleep 3
 curl -I http://localhost:$PORT/unsafe/1200x578/filters:format\(webp\)/https://cremorne.pebble.design/wp-content/uploads/2025/05/cremorne-family-accommodation-one-bedroom-apartment-military-road-bedside-details-844x944.jpg.webp || echo "⚠️ Thumbor test failed. Check Docker logs."
 
-echo "Thumbor is running. Access it at: http://<your-server-ip>/"
+echo "Thumbor is running. Access it at: http://<your-server-ip>/ or at the domain name you set up."
